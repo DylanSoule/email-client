@@ -17,8 +17,7 @@
         gcc
 	gdb
 	gnumake
-	cmake
-	boost
+        curl
       ];
 
       shellHook = ''
