@@ -12,29 +12,123 @@ public:
     - casts constructor params to class attributes
     - inits libcurl and makes sure that it doesn't throw an error
     */
-    SMTPClient(std::string smtpServer, std::string senderAddress)
-    : server_(std::move(smtpServer)), sender_(std::move(senderAddress)){
-        CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
-        if(result != CURLE_OK){
-            throw std::runtime_error("curl_global_init failed: " + std::string(curl_easy_strerror(result)));
-        }
-    }
-    // Deconstructor function cleans up libcurl
-    ~SMTPClient() {
-        curl_global_cleanup();
-    }
+    SMTPClient(
+        std::string smtpServer, 
+        std::string senderEmail, 
+        std::string senderName,
+        std::string senderPswd,
+        std::string senderUname  = "")
+    : server_(std::move(smtpServer)), 
+    senderEmail_(std::move(senderEmail)), 
+    senderName_(std::move(senderName)),
+    senderUname_(senderUname.empty() ? senderEmail_ : std::move(senderUname)),
+    senderPswd_(std::move(senderPswd)) {}
 
-    bool sendMail (){
+    bool sendMail (
+        const std::string& receiverEmail, 
+        const std::string& receiverName, 
+        const std::string& subject, 
+        const std::string& body) {
+        CURL *curl = curl_easy_init();
+        if (!curl) {
+            return false;
+        }
+
+        std::string fromHeader = senderName_.empty() ? 
+            "<" + senderEmail_ + ">"
+            : senderName_ + " <" + senderEmail_ + ">";
         
+        std::string toHeader = receiverName.empty() ? 
+            "<" + receiverEmail + ">"
+            : receiverName + " <" + receiverEmail + ">";
+            
+
+        std::string rawMessage = 
+            "To: " + toHeader + "\r\n" +
+            "From: " + fromHeader + "\r\n" +
+            // "CC: " + ccHeader + "\r\n" +
+            "Subject: " + subject + "\r\n" +
+            "\r\n" + // Empty line divides headers from body
+            body + "\r\n";
+
+        Payload messageState{ &rawMessage, 0 };
+
+        struct curl_slist* recipients = nullptr;
+        recipients = curl_slist_append(recipients, receiverEmail.c_str());
+
+        // Set up credentials - Mail server - username - Password
+        curl_easy_setopt(curl, CURLOPT_URL, server_.c_str());
+        curl_easy_setopt(curl, CURLOPT_USERNAME, senderUname_.c_str());
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, senderPswd_.c_str());
+        
+        // Ensure TLS usage
+        curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
+
+        /*
+        Set up libcurl for sending email by passing need parameters
+            - email
+            - receiving email
+            - function that determines the bytes left in the message
+            - info struct
+            - configure data transfer
+        */
+        curl_easy_setopt(curl, CURLOPT_MAIL_FROM, senderEmail_.c_str());
+        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, SMTPClient::payloadCallBack);
+        curl_easy_setopt(curl, CURLOPT_READDATA, &messageState);
+        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+
+        //send the message
+        CURLcode res = curl_easy_perform(curl);
+        if(res != CURLE_OK) fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+
+        //cleanup
+        curl_slist_free_all(recipients);
+        curl_easy_cleanup(curl);
+
+        return res == CURLE_OK;
     }
 
 
 private:
     // Declare private variables to store constructor parameters
-    std::string sender_;
+    std::string senderEmail_;
+    std::string senderName_;
+    std::string senderUname_;
+    std::string senderPswd_;
     std::string server_;
+
+    struct Payload {
+        const std::string* message;
+        size_t bytesRead;
+    };
+
+    static size_t payloadCallBack(char *buffer, size_t size, size_t nmemb, void *userp) {
+        auto* messageState = static_cast<Payload*>(userp);
+        size_t room = size * nmemb;
+        if (room < 1) return 0;
+
+        size_t remainingBytes = messageState->message->size() - messageState->bytesRead;
+        size_t bytesToCopy = std::min(room, remainingBytes);
+
+        if (bytesToCopy > 0) {
+            std::memcpy(buffer, messageState->message->c_str() + messageState->bytesRead, bytesToCopy);
+            messageState->bytesRead += bytesToCopy;
+        }
+
+        return bytesToCopy;
+    }
 };
 
 int main() {
-    ;
+    // inits global libcurl interaction, done in main so class destruction doesn't close libcurl
+    CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
+    if (result != CURLE_OK) {
+        std::cerr << "curl_global_init failed: " << curl_easy_strerror(result) << "\n";
+        return 1;
+    }
+
+    // clean up libcurl globally
+    curl_global_cleanup();
+    return 0;
 }
