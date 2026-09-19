@@ -26,9 +26,9 @@ public:
 
     bool sendMail (
         const std::string& receiverEmail, 
-        const std::string& receiverName, 
         const std::string& subject, 
-        const std::string& body) {
+        const std::string& body,
+        const std::string& receiverName = "" ) {
         CURL *curl = curl_easy_init();
         if (!curl) {
             return false;
@@ -77,6 +77,7 @@ public:
         curl_easy_setopt(curl, CURLOPT_READFUNCTION, SMTPClient::payloadCallBack);
         curl_easy_setopt(curl, CURLOPT_READDATA, &messageState);
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
         //send the message
         CURLcode res = curl_easy_perform(curl);
@@ -127,6 +128,15 @@ int main() {
         std::cerr << "curl_global_init failed: " << curl_easy_strerror(result) << "\n";
         return 1;
     }
+
+    // multi line body
+    std::string body = R"(Hello Email Receiver,
+
+    This email was sent via a c++ script using libcurl!)";
+
+    // Init class with sender data, and send email using receiver data
+    SMTPClient icloud("smtp.mail.me.com:587", "dylan.soule@icloud.com", "Dylan Soule", "xxxx-xxxx-xxxx-xxxx");
+    icloud.sendMail("2141247@jeffcoschools.us", "First email through c++", body);
 
     // clean up libcurl globally
     curl_global_cleanup();
