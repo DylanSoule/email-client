@@ -24,7 +24,7 @@ public:
     senderUname_(senderUname.empty() ? senderEmail_ : std::move(senderUname)),
     senderPswd_(std::move(senderPswd)) {}
 
-    bool sendMail (
+    bool sendMail(
         const std::string& receiverEmail, 
         const std::string& subject, 
         const std::string& body,
@@ -90,6 +90,20 @@ public:
         return res == CURLE_OK;
     }
 
+    bool fetchMail() {
+        CURL *curl = curl_easy_init();
+        if (!curl) {
+            return false;
+        }
+
+        // Set up credentials
+        curl_easy_setopt(curl, CURLOPT_USERNAME, senderUname_.c_str());
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, senderPswd_.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL)
+
+        // Force SSL/TLS
+        curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
+    }
 
 private:
     // Declare private variables to store constructor parameters
