@@ -5,20 +5,22 @@
 #include <algorithm>
 #include <iostream>
 
-class SMTPClient {
+class EmailClient {
 public:
     /*
     Constructor function
     - casts constructor params to class attributes
     - inits libcurl and makes sure that it doesn't throw an error
     */
-    SMTPClient(
-        std::string smtpServer, 
+    EmailClient(
+        std::string smtpServer,
+        std::string imapServer,
         std::string senderEmail, 
         std::string senderName,
         std::string senderPswd,
         std::string senderUname  = "")
-    : server_(std::move(smtpServer)), 
+    : smtpServer_(std::move(smtpServer)), 
+    imapServer_(std::move(imapServer)),
     senderEmail_(std::move(senderEmail)), 
     senderName_(std::move(senderName)),
     senderUname_(senderUname.empty() ? senderEmail_ : std::move(senderUname)),
@@ -57,7 +59,7 @@ public:
         recipients = curl_slist_append(recipients, receiverEmail.c_str());
 
         // Set up credentials - Mail server - username - Password
-        curl_easy_setopt(curl, CURLOPT_URL, server_.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL, smtpServer_.c_str());
         curl_easy_setopt(curl, CURLOPT_USERNAME, senderUname_.c_str());
         curl_easy_setopt(curl, CURLOPT_PASSWORD, senderPswd_.c_str());
         
@@ -74,7 +76,7 @@ public:
         */
         curl_easy_setopt(curl, CURLOPT_MAIL_FROM, senderEmail_.c_str());
         curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, SMTPClient::payloadCallBack);
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, EmailClient::payloadCallBack);
         curl_easy_setopt(curl, CURLOPT_READDATA, &messageState);
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
         // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -99,10 +101,23 @@ public:
         // Set up credentials
         curl_easy_setopt(curl, CURLOPT_USERNAME, senderUname_.c_str());
         curl_easy_setopt(curl, CURLOPT_PASSWORD, senderPswd_.c_str());
-        curl_easy_setopt(curl, CURLOPT_URL)
+        std::string full = "imaps://" + std::string(imapServer_) + "/INBOX/;MAILINDEX=63";
+        curl_easy_setopt(curl, CURLOPT_URL, full.c_str());
+
+        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
 
         // Force SSL/TLS
         curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
+
+        //perform
+        CURLcode res = curl_easy_perform(curl);
+        if(res != CURLE_OK) fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+
+        //cleanup
+        curl_easy_cleanup(curl);
+
+        return res == CURLE_OK;
     }
 
 private:
@@ -111,7 +126,8 @@ private:
     std::string senderName_;
     std::string senderUname_;
     std::string senderPswd_;
-    std::string server_;
+    std::string smtpServer_;
+    std::string imapServer_;
 
     struct Payload {
         const std::string* message;
@@ -135,6 +151,8 @@ private:
     }
 };
 
+
+
 int main() {
     // inits global libcurl interaction, done in main so class destruction doesn't close libcurl
     CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
@@ -149,8 +167,9 @@ int main() {
     This email was sent via a c++ script using libcurl!)";
 
     // Init class with sender data, and send email using receiver data
-    SMTPClient icloud("smtp.mail.me.com:587", "dylan.soule@icloud.com", "Dylan Soule", "xxxx-xxxx-xxxx-xxxx");
-    icloud.sendMail("2141247@jeffcoschools.us", "First email through c++", body);
+    EmailClient icloud("smtp.mail.me.com:587", "imap.mail.me.com:993", "dylan.soule@icloud.com", "Dylan Soule", "mzma-slqv-ncog-jrsu");
+    // icloud.sendMail("2141247@jeffcoschools.us", "First email through c++", body);
+    icloud.fetchMail();
 
     // clean up libcurl globally
     curl_global_cleanup();
