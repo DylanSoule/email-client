@@ -15,9 +15,10 @@
       # include necessary packages 
       packages = with pkgs; [
         gcc
-	gdb
-	gnumake
+	      gdb
+	      gnumake
         curl
+        vmime
       ];
 
       shellHook = ''

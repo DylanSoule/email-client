@@ -1,9 +1,11 @@
 #include <curl/curl.h>
+#include <vmime/vmime.hpp>
 #include <string>
 #include <cstring>
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 
 class EmailClient {
 public:
@@ -167,7 +169,7 @@ int main() {
     This email was sent via a c++ script using libcurl!)";
 
     // Init class with sender data, and send email using receiver data
-    EmailClient icloud("smtp.mail.me.com:587", "imap.mail.me.com:993", "dylan.soule@icloud.com", "Dylan Soule", "mzma-slqv-ncog-jrsu");
+    EmailClient icloud("smtp.mail.me.com:587", "imap.mail.me.com:993", "dylan.soule@icloud.com", "Dylan Soule", "wxut-zedt-yusl-bkcs");
     // icloud.sendMail("2141247@jeffcoschools.us", "First email through c++", body);
     icloud.fetchMail();
 
