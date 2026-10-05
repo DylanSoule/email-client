@@ -15,8 +15,11 @@
       # include necessary packages 
       packages = with pkgs; [
         gcc
-	      gdb
-	      gnumake
+	gdb
+	gnumake
+	cmake
+
+	# Libraries
         curl
         vmime
       ];
