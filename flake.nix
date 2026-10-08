@@ -6,7 +6,6 @@
   };
 
   outputs = { self , nixpkgs ,... }: let
-    # system should match the system you are running on
     system = "x86_64-linux";
   in {
     devShells."${system}".default = let
@@ -14,18 +13,18 @@
     in pkgs.mkShell {
       # include necessary packages 
       packages = with pkgs; [
-        gcc
-	gdb
 	cmake
+	pkg-config
+	ninja
+	ccache
+	gcc
+      ];
 
+      buildInputs = with pkgs; [
 	# Libraries
         curl
         vmime
       ];
-
-      shellHook = ''
-        code .
-      '';
     };
   };
 }

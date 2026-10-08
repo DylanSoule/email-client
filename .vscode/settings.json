@@ -2,5 +2,9 @@
     "cSpell.words": [
         "Pswd",
         "Soule"
-    ]
+    ],
+    "cmake.useCMakePresets": "always",
+    "cmake.configureOnOpen": true,
+
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }
