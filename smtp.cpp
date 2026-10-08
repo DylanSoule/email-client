@@ -1,5 +1,4 @@
 #include <curl/curl.h>
-#include <vmime/vmime.hpp>
 #include <string>
 #include <cstring>
 #include <vector>
