@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "email/EmailAccount.h"
-#include "email/EmailMessage.h"
-#include "email/EmailAddress.h"
+#include "../email/EmailAccount.h"
+#include "../email/EmailMessage.h"
+#include "../email/EmailAddress.h"
 
 /*
 Sets up data to be sent over smtp with all required parts
@@ -48,8 +48,8 @@ class SmtpClient {
             SmtpTransport& transport
         );
 
-        SmtpResult send(EmailMessage& message)
+        SmtpResult send(EmailMessage& message);
     private:
-        EmailAccount& account_;
+        const EmailAccount& account_;
         SmtpTransport& transport_;
 };

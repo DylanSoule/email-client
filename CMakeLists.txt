@@ -24,7 +24,7 @@ add_executable(email-client
 
 target_include_directories(email-client
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/src
 )
 
 target_link_libraries(email-client
