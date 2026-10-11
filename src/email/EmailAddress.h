@@ -9,7 +9,7 @@ Defines any email address stored with email client
         name = John Smith
         address = john.smith@example.com
 */
-struct emailAddress {
+struct EmailAddress {
     std::string name;
     std::string address;
 };

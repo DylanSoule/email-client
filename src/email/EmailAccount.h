@@ -7,7 +7,7 @@ Defines email account for client
     This will be a account the user owns or has access to
     Eventually will be more secure(ex not plaintext password storage)
 */
-struct emailAccount {
+struct EmailAccount {
     std::string id;
 
     std::string emailAddress;

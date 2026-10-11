@@ -14,14 +14,14 @@ This message is of any type, received, draft, or already sent
 Plaintext message to be shown to the user
     Mime parsing and compilation will happen before assignment to message struct
 */
-struct message {
+struct Message {
     int id;
 
-    emailAddress sender;
+    EmailAddress sender;
     
-    std::vector<emailAddress> recipients;
-    std::vector<emailAddress> carbonCopy;
-    std::vector<emailAddress> blindCarbonCopy;
+    std::vector<EmailAddress> recipients;
+    std::vector<EmailAddress> carbonCopy;
+    std::vector<EmailAddress> blindCarbonCopy;
 
     std::string subject;
     std::string contents;
