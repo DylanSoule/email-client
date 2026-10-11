@@ -14,7 +14,7 @@ This message is of any type, received, draft, or already sent
 Plaintext message to be shown to the user
     Mime parsing and compilation will happen before assignment to message struct
 */
-struct Message {
+struct EmailMessage {
     int id;
 
     EmailAddress sender;
