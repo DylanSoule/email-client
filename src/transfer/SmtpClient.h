@@ -6,6 +6,7 @@
 #include "../email/EmailAccount.h"
 #include "../email/EmailMessage.h"
 #include "../email/EmailAddress.h"
+#include "../network/SmtpTransport.h"
 
 /*
 Sets up data to be sent over smtp with all required parts
@@ -26,20 +27,7 @@ struct SmtpData {
     std::string contents;
 };
 
-/*
-Stores result of smtp transaction
-*/
-struct SmtpResult {
-    bool success = false;
-    std::string error;
-};
 
-class SmtpTransport {
-    public:
-        virtual ~SmtpTransport() = default;
-
-        virtual SmtpResult send(const SmtpData& message);
-};
 
 class SmtpClient {
     public:
