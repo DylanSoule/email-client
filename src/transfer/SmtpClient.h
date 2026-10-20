@@ -19,24 +19,39 @@ struct SmtpData {
     std::string serverUrl;
 
     std::string sender;
-    std::vector<EmailAddress> recipients;
-    std::vector<EmailAddress> carbonCopy;
-    std::vector<EmailAddress> blindCarbonCopy;
+    std::vector<std::string> recipients;
+    std::vector<std::string> carbonCopy;
+    std::vector<std::string> blindCarbonCopy;
 
     std::string subject;
     std::string contents;
 };
 
 
-
+/*
+Configures message to be sent via SMTP
+*/
 class SmtpClient {
     public:
+        /*
+        Passes class params to private class variables
+        */
         SmtpClient(
             const EmailAccount& account,
             SmtpTransport& transport
         );
+        
+        /*
+        Builds SmtpData object based off of class variables account_, transport_, and passed message struct
+            Params: message - pointer to EmailMessage struct
+            Result: SmtpData struct - configured to be sent to transport class
+        */
+        SmtpData buildMessage(EmailMessage& message); 
 
-        SmtpResult send(EmailMessage& message);
+        /*
+        Sends data to transport class to be sent over SMTP
+        */
+        SmtpResult send(SmtpData& data);
     private:
         const EmailAccount& account_;
         SmtpTransport& transport_;
