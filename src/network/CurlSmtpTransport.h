@@ -3,7 +3,7 @@
 #include <string>
 
 #include "SmtpTransport.h"
-#include "SmtpClient.h"
+#include "../transfer/SmtpClient.h"
 
 /*
 Derived from SmtpTransport class

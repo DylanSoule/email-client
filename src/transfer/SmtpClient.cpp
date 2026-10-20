@@ -15,7 +15,7 @@ SmtpClient::SmtpClient(
         ) : account_(account), transport_(transport) {}
 
 
-SmtpData SmtpClient::buildMessage(EmailMessage& message) {
+SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     SmtpData temp;
 
     temp.username = account_.username;

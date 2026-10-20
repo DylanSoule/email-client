@@ -46,7 +46,7 @@ class SmtpClient {
             Params: message - pointer to EmailMessage struct
             Result: SmtpData struct - configured to be sent to transport class
         */
-        SmtpData buildMessage(EmailMessage& message); 
+        SmtpData buildMessage(const EmailMessage& message); 
 
         /*
         Sends data to transport class to be sent over SMTP
