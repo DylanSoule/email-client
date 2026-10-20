@@ -17,7 +17,7 @@ class CurlMulti {
 
         void addHandle(CURL* easy_handle);
 
-        void removeHandle();
+        void removeHandle(CURL* easy_handle);
     private:
         CURLM* multi_;
 };

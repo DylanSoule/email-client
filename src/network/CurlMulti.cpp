@@ -24,5 +24,8 @@ CurlMulti::~CurlMulti() {
 }
 
 void CurlMulti::addHandle(CURL* easy_handle) {
-    
+    CURLMcode rc  = curl_multi_add_handle(multi_, easy_handle);
+    if (rc != CURLM_OK) {
+        throw std::runtime_error("Failed to add handle to multi interface");
+    }
 }
