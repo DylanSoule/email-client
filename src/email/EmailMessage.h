@@ -17,7 +17,7 @@ Plaintext message to be shown to the user
 struct EmailMessage {
     int id;
 
-    EmailAddress sender;
+    EmailAccount sender;
     
     std::vector<EmailAddress> recipients;
     std::vector<EmailAddress> carbonCopy;
