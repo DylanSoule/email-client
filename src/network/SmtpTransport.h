@@ -1,8 +1,8 @@
-#pragma once;
+#pragma once
 
 #include <string>
 
-#include "../transfer/SmtpClient.h"
+struct SmtpData; //forward declaration
 
 /*
 Stores result of smtp transaction
@@ -13,8 +13,8 @@ struct SmtpResult {
 };
 
 class SmtpTransport {
-    public:
-        virtual ~SmtpTransport() = default;
+public:
+    virtual ~SmtpTransport() = default;
 
-        virtual SmtpResult send(const SmtpData& message) = 0;
+    virtual SmtpResult send(const SmtpData& message) = 0;
 };

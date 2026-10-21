@@ -16,7 +16,8 @@ struct EmailAccount {
     std::string username;
     std::string password;
 
-    enum class loginMethod { oauth2, simple };
+    enum class LoginMethod { oauth2, simple };
+    LoginMethod loginMethod;
 
     std::string smtpServer;
     u_int16_t smtpPort;

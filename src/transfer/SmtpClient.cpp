@@ -29,30 +29,41 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     
     if (message.recipients.empty() && message.carbonCopy.empty() && message.blindCarbonCopy.empty()) {
         throw std::invalid_argument("No recipients");
-    } else {
-        for(const EmailAddress& recipient : message.recipients) {
-            temp.recipients.push_back(
-                recipient.name.empty() ? 
-                    "<" + recipient.address + ">" :
-                    recipient.name + "<" + recipient.address + ">"
-            );
-        }
-        for(const EmailAddress& recipient : message.carbonCopy) {
-            temp.carbonCopy.push_back(
-                recipient.name.empty() ? 
-                    "<" + recipient.address + ">" :
-                    recipient.name + "<" + recipient.address + ">"
-            );
-        }
-        for(const EmailAddress& recipient : message.blindCarbonCopy) {
-            temp.blindCarbonCopy.push_back(
-                recipient.name.empty() ? 
-                    "<" + recipient.address + ">" :
-                    recipient.name + "<" + recipient.address + ">"
-            );
-        }
-
-        temp.subject = message.subject;
-        temp.contents = message.contents;
     }
+
+    for (const EmailAddress& recipient : message.recipients) {
+        temp.recipients.push_back(
+            recipient.name.empty() ?
+                "<" + recipient.address + ">" :
+                recipient.name + "<" + recipient.address + ">"
+        );
+    }
+    for (const EmailAddress& recipient : message.carbonCopy) {
+        temp.carbonCopy.push_back(
+            recipient.name.empty() ?
+                "<" + recipient.address + ">" :
+                recipient.name + "<" + recipient.address + ">"
+        );
+    }
+    for (const EmailAddress& recipient : message.blindCarbonCopy) {
+        temp.blindCarbonCopy.push_back(
+            recipient.name.empty() ?
+                "<" + recipient.address + ">" :
+                recipient.name + "<" + recipient.address + ">"
+        );
+    }
+
+    temp.subject = message.subject;
+    temp.contents = message.contents;
+
+    return temp;
+}
+
+SmtpResult SmtpClient::send(SmtpData& data) {
+    SmtpResult res = transport_.send(data);
+    if (!res.success) {
+        throw std::runtime_error("Failed to send data");
+    }
+
+    return res;
 }
