@@ -18,6 +18,7 @@ struct SmtpData {
 
     std::string serverUrl;
 
+    std::string date;
     std::string sender;
     std::vector<std::string> recipients;
     std::vector<std::string> carbonCopy;
@@ -27,6 +28,11 @@ struct SmtpData {
     std::string contents;
 };
 
+
+/*
+Formats Date for RFC 5322
+*/
+std::string getRfc5322Date();
 
 /*
 Configures message to be sent via SMTP

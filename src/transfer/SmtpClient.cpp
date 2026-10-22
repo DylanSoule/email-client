@@ -1,6 +1,8 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include <chrono>
+#include <format>
 
 #include "SmtpClient.h"
 
@@ -8,6 +10,21 @@
 #include "../email/EmailMessage.h"
 #include "../email/EmailAddress.h"
 #include "../network/SmtpTransport.h"
+
+
+std::string getRfc5322Date()
+{
+    using namespace std::chrono;
+
+    const auto now = system_clock::now();
+    const zoned_time localNow{current_zone(), now};
+
+    return std::format(
+        "{:%a, %d %b %Y %H:%M:%S %z}",
+        localNow
+    );
+}
+
 
 SmtpClient::SmtpClient(
             const EmailAccount& account,
@@ -22,6 +39,8 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     temp.password = account_.password;
 
     temp.serverUrl = account_.smtpServer + ":" + std::to_string(account_.smtpPort);
+
+    temp.date = getRfc5322Date();
 
     temp.sender = account_.name.empty() ? 
         "<" + account_.emailAddress + ">" :
