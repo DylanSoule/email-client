@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <chrono>
+#include <optional>
 
 #include "EmailAccount.h"
 #include "EmailAddress.h"
@@ -26,7 +26,26 @@ struct EmailMessage {
     std::string subject;
     std::string contents;
 
-    enum class type { received, draft, sent };
+    enum class State { received, draft, sent };
+    State state;
 
-    std::chrono::system_clock::time_point time;
+    std::string date;
 };
+
+
+/*
+Given basic information, likely pulled from local database, will construct an email message struct
+Required: id, sender
+Default value: draft for new messages, saved messages value passed in
+Optional: Recipients, cc, bcc, subject, and contents
+*/
+EmailMessage constructMessage(
+    int mId, 
+    EmailAccount mSender, 
+    EmailMessage::State mState = EmailMessage::State::draft,
+    std::optional<std::vector<EmailAddress>> mRecipients,
+    std::optional<std::vector<EmailAddress>> mCc,
+    std::optional<std::vector<EmailAddress>> mBcc,
+    std::optional<std::string> Msubject,
+    std::optional<std::string> Mcontents
+    );
