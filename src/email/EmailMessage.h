@@ -49,3 +49,9 @@ EmailMessage constructMessage(
     std::optional<std::string> Msubject,
     std::optional<std::string> Mcontents
     );
+
+
+/*
+Formats Date for RFC 5322
+*/
+std::string getRfc5322Date();
