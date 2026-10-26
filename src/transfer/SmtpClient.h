@@ -20,19 +20,14 @@ struct SmtpData {
 
     std::string date;
     std::string sender;
-    std::vector<std::string> recipients;
-    std::vector<std::string> carbonCopy;
-    std::vector<std::string> blindCarbonCopy;
+    std::string recipients;
+    std::string carbonCopy;
+    std::string blindCarbonCopy;
 
     std::string subject;
     std::string contents;
 };
 
-
-/*
-Formats Date for RFC 5322
-*/
-std::string getRfc5322Date();
 
 /*
 Configures message to be sent via SMTP

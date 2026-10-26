@@ -1,8 +1,6 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
-#include <chrono>
-#include <format>
 
 #include "SmtpClient.h"
 
@@ -10,20 +8,6 @@
 #include "../email/EmailMessage.h"
 #include "../email/EmailAddress.h"
 #include "../network/SmtpTransport.h"
-
-
-std::string getRfc5322Date()
-{
-    using namespace std::chrono;
-
-    const auto now = system_clock::now();
-    const zoned_time localNow{current_zone(), now};
-
-    return std::format(
-        "{:%a, %d %b %Y %H:%M:%S %z}",
-        localNow
-    );
-}
 
 
 SmtpClient::SmtpClient(
@@ -51,25 +35,13 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     }
 
     for (const EmailAddress& recipient : message.recipients) {
-        temp.recipients.push_back(
-            recipient.name.empty() ?
-                "<" + recipient.address + ">" :
-                recipient.name + "<" + recipient.address + ">"
-        );
+        temp.recipients += recipient.name + "<" + recipient.address + ">";
     }
     for (const EmailAddress& recipient : message.carbonCopy) {
-        temp.carbonCopy.push_back(
-            recipient.name.empty() ?
-                "<" + recipient.address + ">" :
-                recipient.name + "<" + recipient.address + ">"
-        );
+        temp.carbonCopy += recipient.name + "<" + recipient.address + ">";
     }
     for (const EmailAddress& recipient : message.blindCarbonCopy) {
-        temp.blindCarbonCopy.push_back(
-            recipient.name.empty() ?
-                "<" + recipient.address + ">" :
-                recipient.name + "<" + recipient.address + ">"
-        );
+        temp.blindCarbonCopy += recipient.name + "<" + recipient.address + ">";
     }
 
     temp.subject = message.subject;
