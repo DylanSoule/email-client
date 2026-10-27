@@ -24,6 +24,8 @@ struct SmtpData {
     std::string carbonCopy;
     std::string blindCarbonCopy;
 
+    std::string messageId;
+
     std::string subject;
     std::string contents;
 };
@@ -48,6 +50,11 @@ class SmtpClient {
             Result: SmtpData struct - configured to be sent to transport class
         */
         SmtpData buildMessage(const EmailMessage& message); 
+
+        /*
+        Formats receiver vector into usable string for SMTP
+        */
+        std::string receiverList(const std::vector<EmailAddress>& tempMessage);
 
         /*
         Sends data to transport class to be sent over SMTP

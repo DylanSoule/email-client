@@ -16,6 +16,19 @@ SmtpClient::SmtpClient(
         ) : account_(account), transport_(transport) {}
 
 
+std::string SmtpClient::receiverList(const std::vector<EmailAddress>& tempMessage) {
+    bool first = true;
+    std::string result;
+    for (const EmailAddress& recipient : tempMessage) {
+        if (!first) {
+            result += ", ";
+            first = false;
+        }
+        result += recipient.name + " <" + recipient.address + ">";
+    }
+    return result;
+}
+
 SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     SmtpData temp;
 
@@ -34,15 +47,9 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
         throw std::invalid_argument("No recipients");
     }
 
-    for (const EmailAddress& recipient : message.recipients) {
-        temp.recipients += recipient.name + "<" + recipient.address + ">";
-    }
-    for (const EmailAddress& recipient : message.carbonCopy) {
-        temp.carbonCopy += recipient.name + "<" + recipient.address + ">";
-    }
-    for (const EmailAddress& recipient : message.blindCarbonCopy) {
-        temp.blindCarbonCopy += recipient.name + "<" + recipient.address + ">";
-    }
+    temp.recipients = receiverList(message.recipients);
+    temp.carbonCopy = receiverList(message.carbonCopy);
+    temp.blindCarbonCopy = receiverList(message.blindCarbonCopy);
 
     temp.subject = message.subject;
     temp.contents = message.contents;
