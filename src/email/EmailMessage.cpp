@@ -8,7 +8,7 @@
 #include "EmailAccount.h"
 #include "EmailAddress.h"
 
-std::string getRfc5322Date()
+std::string getRfc5322Date(std::string format)
 {
 
     const auto now = std::chrono::floor<std::chrono::seconds>(
@@ -17,7 +17,7 @@ std::string getRfc5322Date()
     const std::chrono::zoned_time localNow{std::chrono::current_zone(), now};
 
     return std::format(
-        "{:%a, %d %b %Y %H:%M:%S %z}",
+        format,
         localNow
     );
 }
@@ -61,5 +61,5 @@ EmailMessage constructMessage(
         temp.contents = MContents.value();
     }
 
-    temp.date = getRfc5322Date();
+    temp.date = getRfc5322Date("{:%a, %d %b %Y %H:%M:%S %z}");
 }
