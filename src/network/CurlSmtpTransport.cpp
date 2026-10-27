@@ -18,9 +18,8 @@ SmtpResult CurlSmtpTransport::send (const SmtpData& message) {
     std::string rawMessage =
         "Date: " + message.date + "\r\n" +
         "To: " + message.sender + "\r\n" +
-        ((message.carbonCopy.empty()) ? 
-        "" :
-        "Cc: " + message.carbonCopy + "\r\n") +
+        (message.carbonCopy.empty() ? 
+        "" : "Cc: " + message.carbonCopy + "\r\n") +
         
 }
 
