@@ -39,7 +39,7 @@ struct EmailMessage {
 /*
 Formats Date for RFC 5322
 */
-std::string getRfc5322Date();
+std::string getDate();
 
 
 /*

@@ -3,12 +3,15 @@
 #include <chrono>
 #include <format>
 #include <optional>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include "EmailMessage.h"
 #include "EmailAccount.h"
 #include "EmailAddress.h"
 
-std::string getRfc5322Date(std::string format)
+std::string getDate(std::string format)
 {
 
     const auto now = std::chrono::floor<std::chrono::seconds>(
@@ -65,5 +68,5 @@ EmailMessage constructMessage(
         temp.contents = MContents.value();
     }
 
-    temp.date = getRfc5322Date("{:%a, %d %b %Y %H:%M:%S %z}");
+    temp.date = getDate("{:%a, %d %b %Y %H:%M:%S %z}");
 }

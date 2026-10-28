@@ -24,6 +24,7 @@
 	# Libraries
         curl
         gmime3
+	boost
       ];
     };
   };
