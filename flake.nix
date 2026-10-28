@@ -23,7 +23,7 @@
       buildInputs = with pkgs; [
 	# Libraries
         curl
-        vmime
+        gmime3
       ];
     };
   };
