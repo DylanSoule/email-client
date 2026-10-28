@@ -17,6 +17,8 @@ Plaintext message to be shown to the user
 struct EmailMessage {
     int id;
     std::string messageId;
+    std::string referenceId;
+    std::string replyId;
 
     EmailAccount sender;
 
@@ -35,6 +37,17 @@ struct EmailMessage {
 
 
 /*
+Formats Date for RFC 5322
+*/
+std::string getRfc5322Date();
+
+
+/*
+Creates a unique message id according to RFC 5322 rules
+*/
+std::string getMessageId(EmailAccount& mSender);
+
+/*
 Given basic information, likely pulled from local database, will construct an email message struct
 Required: id, sender
 Default value: draft for new messages, saved messages value passed in
@@ -50,9 +63,3 @@ EmailMessage constructMessage(
     std::optional<std::string> Msubject,
     std::optional<std::string> Mcontents
     );
-
-
-/*
-Formats Date for RFC 5322
-*/
-std::string getRfc5322Date();

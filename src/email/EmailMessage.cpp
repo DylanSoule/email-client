@@ -22,6 +22,10 @@ std::string getRfc5322Date(std::string format)
     );
 }
 
+std::string getMessageId(std::string& addr) {
+    
+}
+
 
 EmailMessage constructMessage(
     int mId, 
