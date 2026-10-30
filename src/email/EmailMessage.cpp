@@ -25,6 +25,14 @@ std::string getDate(std::string format)
     );
 }
 
+std::string getUuid() {
+    using namespace boost::uuids;
+
+    random_generator gen;
+    uuid id = gen();
+    return to_string(id);
+}
+
 std::string getMessageId(std::string& addr) {
     
 }

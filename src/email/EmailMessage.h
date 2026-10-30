@@ -41,6 +41,11 @@ Formats Date for RFC 5322
 */
 std::string getDate();
 
+/*
+Generate UUID v4 for message id with 122 bits of security
+*/
+std::string getUuid();
+
 
 /*
 Creates a unique message id according to RFC 5322 rules
