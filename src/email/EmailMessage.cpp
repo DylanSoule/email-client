@@ -3,6 +3,8 @@
 #include <chrono>
 #include <format>
 #include <optional>
+#include <string>
+#include <stdexcept>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -34,6 +36,14 @@ std::string getUuid() {
 }
 
 std::string getMessageId(std::string& addr) {
+    std::size_t pos = addr.find('@');
+
+    if (pos != std::string::npos) {
+        std::string domain = addr.substr(pos + 1);
+    } else {
+        throw std::runtime_error("Not a valid address");
+    }
+
     
 }
 
