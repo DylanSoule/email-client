@@ -51,7 +51,7 @@ std::string getUuid();
 /*
 Creates a unique message id according to RFC 5322 rules
 */
-std::string getMessageId(EmailAccount& mSender);
+std::string getMessageId(const std::string& addr);
 
 /*
 Given basic information, likely pulled from local database, will construct an email message struct
@@ -61,11 +61,12 @@ Optional: Recipients, cc, bcc, subject, and contents
 */
 EmailMessage constructMessage(
     int mId, 
-    EmailAccount mSender, 
+    const EmailAccount& mSender,
     EmailMessage::State mState = EmailMessage::State::draft,
-    std::optional<std::vector<EmailAddress>> mRecipients,
-    std::optional<std::vector<EmailAddress>> mCc,
-    std::optional<std::vector<EmailAddress>> mBcc,
-    std::optional<std::string> Msubject,
-    std::optional<std::string> Mcontents
+    std::optional<std::string> mReference = std::nullopt,
+    std::optional<std::vector<EmailAddress>> mRecipients = std::nullopt,
+    std::optional<std::vector<EmailAddress>> mCc = std::nullopt,
+    std::optional<std::vector<EmailAddress>> mBcc = std::nullopt,
+    std::optional<std::string> Msubject = std::nullopt,
+    std::optional<std::string> Mcontents = std::nullopt
     );

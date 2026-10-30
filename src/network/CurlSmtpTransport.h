@@ -4,6 +4,8 @@
 
 #include "SmtpTransport.h"
 #include "../transfer/SmtpClient.h"
+#include "../email/EmailAccount.h"
+#include "CurlMulti.h"
 
 /*
 Derived from SmtpTransport class
@@ -11,9 +13,15 @@ Build for interfacing with libcurl for smtp
 */
 class CurlSmtpTransport : public SmtpTransport {
     public:
-        SmtpResult send(const SmtpData& message) override;
+        CurlSmtpTransport(CurlMulti multi);
+
+        SmtpResult send (
+            const SmtpData& message, 
+            EmailAccount& account) override;
 
     private:
+        CurlMulti multi_;
+
         struct Payload {
             const std::string* message;
             size_t bytesRead;

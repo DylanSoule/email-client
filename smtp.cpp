@@ -122,7 +122,7 @@ public:
     }
 
 private:
-    // Declare private variables to store constructor parameters
+    // Declare private vi "Curariables to store constructor parameters
     std::string senderEmail_;
     std::string senderName_;
     std::string senderUname_;

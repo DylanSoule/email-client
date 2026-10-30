@@ -3,7 +3,6 @@
 #include <chrono>
 #include <format>
 #include <optional>
-#include <string>
 #include <stdexcept>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -13,7 +12,7 @@
 #include "EmailAccount.h"
 #include "EmailAddress.h"
 
-std::string getDate(std::string format)
+std::string getDate()
 {
 
     const auto now = std::chrono::floor<std::chrono::seconds>(
@@ -21,10 +20,7 @@ std::string getDate(std::string format)
     );
     const std::chrono::zoned_time localNow{std::chrono::current_zone(), now};
 
-    return std::format(
-        format,
-        localNow
-    );
+    return std::format("{:%a, %d %b %Y %H:%M:%S %z}", localNow);
 }
 
 std::string getUuid() {
@@ -36,7 +32,7 @@ std::string getUuid() {
     return to_string(id);
 }
 
-std::string getMessageId(std::string& addr) {
+std::string getMessageId(const std::string& addr) {
     // Split the email string based on "@" symbol to get domain
     std::size_t pos = addr.find('@');
 
@@ -55,8 +51,8 @@ std::string getMessageId(std::string& addr) {
 
 EmailMessage constructMessage(
     int mId, 
-    EmailAccount &mSender, 
-    EmailMessage::State mState = EmailMessage::State::draft,
+    const EmailAccount& mSender,
+    EmailMessage::State mState,
     std::optional<std::string> mReference,
     std::optional<std::vector<EmailAddress>> mRecipients,
     std::optional<std::vector<EmailAddress>> mCc,
@@ -104,7 +100,7 @@ EmailMessage constructMessage(
     }
 
     // Get date that message is created
-    temp.date = getDate("{:%a, %d %b %Y %H:%M:%S %z}");
+    temp.date = getDate();
 
     // Get unique message id with format uuid@example.com
     temp.messageId = getMessageId(mSender.emailAddress);

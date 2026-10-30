@@ -2,7 +2,7 @@
 #include <string>
 #include <stdexcept>
 
-#include <CurlGlobal.h>
+#include "CurlGlobal.h"
 
 CurlGlobal::CurlGlobal(){
     CURLcode result = curl_global_init(CURL_GLOBAL_ALL);

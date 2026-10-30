@@ -24,6 +24,10 @@ struct SmtpData {
     std::string carbonCopy;
     std::string blindCarbonCopy;
 
+    std::vector<EmailAddress> recipientsList;
+    std::vector<EmailAddress> carbonCopyList;
+    std::vector<EmailAddress> blindCarbonCopyList;
+
     std::string messageId;
 
     std::string subject;
@@ -52,15 +56,15 @@ class SmtpClient {
         SmtpData buildMessage(const EmailMessage& message); 
 
         /*
-        Formats receiver vector into usable string for SMTP
-        */
-        std::string receiverList(const std::vector<EmailAddress>& tempMessage);
-
-        /*
         Sends data to transport class to be sent over SMTP
         */
-        SmtpResult send(SmtpData& data);
+        SmtpResult send(SmtpData& data, EmailAccount& account);
     private:
         const EmailAccount& account_;
         SmtpTransport& transport_;
+
+        /*
+        Formats receiver vector into usable string for SMTP
+        */
+        std::string receiverList(const std::vector<EmailAddress>& tempMessage);
 };

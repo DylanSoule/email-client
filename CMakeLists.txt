@@ -20,13 +20,19 @@ pkg_check_modules(VMIME REQUIRED IMPORTED_TARGET vmime)
 
 add_executable(email-client
     src/main.cpp
-    src/email/EmailMessage.cpp
+
+    src/network/CurlGlobal.h
+    src/network/CurlGlobal.cpp
+    src/network/CurlMulti.h
+    src/network/CurlMulti.cpp
+
     src/transfer/SmtpClient.cpp
     src/transfer/SmtpClient.h
 
     src/email/EmailAccount.h
     src/email/EmailAddress.h
     src/email/EmailMessage.h
+    src/email/EmailMessage.cpp
 
     src/network/SmtpTransport.h
     src/network/CurlSmtpTransport.cpp

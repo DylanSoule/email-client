@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "../email/EmailAccount.h"
+
 struct SmtpData; //forward declaration
 
 /*
@@ -16,5 +18,7 @@ class SmtpTransport {
 public:
     virtual ~SmtpTransport() = default;
 
-    virtual SmtpResult send(const SmtpData& message) = 0;
+    virtual SmtpResult send(
+        const SmtpData& message, 
+        EmailAccount& account) = 0;
 };

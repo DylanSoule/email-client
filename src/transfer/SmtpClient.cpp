@@ -37,7 +37,7 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
 
     temp.serverUrl = account_.smtpServer + ":" + std::to_string(account_.smtpPort);
 
-    temp.date = getRfc5322Date();
+    temp.date = message.date;
 
     temp.sender = account_.name.empty() ? 
         "<" + account_.emailAddress + ">" :
@@ -51,14 +51,19 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     temp.carbonCopy = receiverList(message.carbonCopy);
     temp.blindCarbonCopy = receiverList(message.blindCarbonCopy);
 
+    // Give vector as well for curl setup
+    temp.recipientsList = message.recipients;
+    temp.carbonCopyList = message.carbonCopy;
+    temp.blindCarbonCopyList = message.blindCarbonCopy;
+
     temp.subject = message.subject;
     temp.contents = message.contents;
 
     return temp;
 }
 
-SmtpResult SmtpClient::send(SmtpData& data) {
-    SmtpResult res = transport_.send(data);
+SmtpResult SmtpClient::send(SmtpData& data, EmailAccount& account) {
+    SmtpResult res = transport_.send(data, account);
     if (!res.success) {
         throw std::runtime_error("Failed to send data");
     }
