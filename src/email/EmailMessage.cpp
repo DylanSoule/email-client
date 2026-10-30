@@ -28,6 +28,7 @@ std::string getDate(std::string format)
 }
 
 std::string getUuid() {
+    // Generate uuid using boost uuids with 122 bits of security
     using namespace boost::uuids;
 
     random_generator gen;
@@ -36,15 +37,19 @@ std::string getUuid() {
 }
 
 std::string getMessageId(std::string& addr) {
+    // Split the email string based on "@" symbol to get domain
     std::size_t pos = addr.find('@');
 
-    if (pos != std::string::npos) {
-        std::string domain = addr.substr(pos + 1);
-    } else {
+    // Ensure split is valid and there is actual "@" symbol
+    if (pos == std::string::npos) {
         throw std::runtime_error("Not a valid address");
     }
-
     
+    // Append domain and uuid together to get message id
+    std::string domain = addr.substr(pos + 1);
+    std::string uuid = getUuid();
+
+    return uuid + "@" + domain;
 }
 
 
@@ -52,18 +57,28 @@ EmailMessage constructMessage(
     int mId, 
     EmailAccount &mSender, 
     EmailMessage::State mState = EmailMessage::State::draft,
+    std::optional<std::string> mReference,
     std::optional<std::vector<EmailAddress>> mRecipients,
     std::optional<std::vector<EmailAddress>> mCc,
     std::optional<std::vector<EmailAddress>> mBcc,
-    std::optional<std::string> MSubject,
-    std::optional<std::string> MContents) {
+    std::optional<std::string> mSubject,
+    std::optional<std::string> mContents) {
     
+    // Declare temporary struct
     EmailMessage temp;
 
+    // Assign basic values to temp passed into function
     temp.id = mId;
     temp.sender = mSender;
     temp.state = mState;
+
+    // Assign what message references if value passed into function
+    if (mReference){
+        temp.referenceId = mReference.value();
+    }
     
+    // Loop through recipients for recipients, cc, and bcc
+    // in order to append them vector in message struct
     if (mRecipients) {
         for(auto& val : mRecipients.value()) {
             temp.recipients.push_back(val);
@@ -79,12 +94,20 @@ EmailMessage constructMessage(
             temp.blindCarbonCopy.push_back(val);
         }
     }
-    if (MSubject) {
-        temp.subject = MSubject.value();
+
+    // Apply subject and contents to smtp data if they exist
+    if (mSubject) {
+        temp.subject = mSubject.value();
     }
-    if (MContents) {
-        temp.contents = MContents.value();
+    if (mContents) {
+        temp.contents = mContents.value();
     }
 
+    // Get date that message is created
     temp.date = getDate("{:%a, %d %b %Y %H:%M:%S %z}");
+
+    // Get unique message id with format uuid@example.com
+    temp.messageId = getMessageId(mSender.emailAddress);
+
+    return temp;
 }

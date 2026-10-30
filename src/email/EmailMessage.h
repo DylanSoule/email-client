@@ -43,6 +43,7 @@ std::string getDate();
 
 /*
 Generate UUID v4 for message id with 122 bits of security
+Returns a string to append to messageId string
 */
 std::string getUuid();
 
