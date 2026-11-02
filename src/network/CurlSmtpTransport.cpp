@@ -1,6 +1,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <cstring>
+#include <stdexcept>
 
 #include "SmtpTransport.h"
 #include "CurlSmtpTransport.h"
@@ -8,9 +9,9 @@
 #include "../email/EmailAccount.h"
 
 
-CurlSmtpTransport::CurlSmtpTransport(CurlMulti multi) : multi_(multi) {}
+CurlSmtpTransport::CurlSmtpTransport(CurlMulti& multi) : multi_(multi) {}
 
-SmtpResult CurlSmtpTransport::send (
+void CurlSmtpTransport::prepare (
     const SmtpData& message, 
     EmailAccount& account) {
     SmtpResult res; 
@@ -18,8 +19,7 @@ SmtpResult CurlSmtpTransport::send (
     // Initialize easy handle and check if it exists
     CURL *easy = curl_easy_init();
     if(!easy) {
-        res.error = "Failed to init";
-        return res;
+        throw std::runtime_error("Failed to init easy handle");
     }
 
     std::string rawMessage =
@@ -72,8 +72,8 @@ SmtpResult CurlSmtpTransport::send (
     curl_easy_setopt(easy, CURLOPT_UPLOAD, 1L);
     // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
-    // Add handle to multi
-    
+    // Add handle to multi interface
+    multi_.addHandle(easy);
 }
 
 size_t CurlSmtpTransport::payloadCallBack(char *buffer, size_t size, size_t nmemb, void *userp) {

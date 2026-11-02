@@ -29,3 +29,7 @@ void CurlMulti::addHandle(CURL* easy_handle) {
         throw std::runtime_error("Failed to add handle to multi interface");
     }
 }
+
+CURLcode CurlMulti::perform() {
+    int stillRunning;
+}

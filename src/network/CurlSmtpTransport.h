@@ -13,14 +13,14 @@ Build for interfacing with libcurl for smtp
 */
 class CurlSmtpTransport : public SmtpTransport {
     public:
-        CurlSmtpTransport(CurlMulti multi);
+        CurlSmtpTransport(CurlMulti& multi);
 
-        SmtpResult send (
+        void prepare (
             const SmtpData& message, 
             EmailAccount& account) override;
 
     private:
-        CurlMulti multi_;
+        CurlMulti& multi_;
 
         struct Payload {
             const std::string* message;

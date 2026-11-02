@@ -73,12 +73,13 @@ int main() {
         "African or American Swallow"
     );
 
-    CurlSmtpTransport transport;
+    CurlSmtpTransport transport(multiIface);
 
     SmtpClient client(dylan, transport);
 
     SmtpData mess1 = client.buildMessage(message);
-    client.send(mess1);
+    client.prepare(mess1);
 
+    
     return 0;
 }
