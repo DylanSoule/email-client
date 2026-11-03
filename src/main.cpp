@@ -78,7 +78,7 @@ int main() {
     SmtpClient client(dylan, transport);
 
     SmtpData mess1 = client.buildMessage(message);
-    client.prepare(mess1);
+    client.send(mess1, dylan);
 
     
     return 0;

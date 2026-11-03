@@ -15,17 +15,12 @@ class CurlSmtpTransport : public SmtpTransport {
     public:
         CurlSmtpTransport(CurlMulti& multi);
 
-        void prepare (
+        SmtpResult prepare (
             const SmtpData& message, 
             EmailAccount& account) override;
 
     private:
         CurlMulti& multi_;
-
-        struct Payload {
-            const std::string* message;
-            size_t bytesRead;
-        };
 
         // Gives libcurl the bytes that it needs to copy for each packet
         static size_t payloadCallBack(char *buffer, size_t size, size_t nmemb, void *userp);

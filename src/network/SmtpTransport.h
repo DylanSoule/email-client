@@ -6,11 +6,20 @@
 
 struct SmtpData; //forward declaration
 
+/*
+Stores result of smtp transaction
+*/
+struct SmtpResult {
+    bool success = false;
+    std::string error;
+};
+
+
 class SmtpTransport {
 public:
     virtual ~SmtpTransport() = default;
 
-    virtual void prepare(
+    virtual SmtpResult prepare(
         const SmtpData& message, 
         EmailAccount& account) = 0;
 };
