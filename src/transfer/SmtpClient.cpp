@@ -29,6 +29,7 @@ std::string SmtpClient::receiverList(const std::vector<EmailAddress>& tempMessag
     return result;
 }
 
+
 SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
     SmtpData temp;
 
@@ -63,7 +64,7 @@ SmtpData SmtpClient::buildMessage(const EmailMessage& message) {
 }
 
 SmtpResult SmtpClient::send(SmtpData& data, EmailAccount& account) {
-    SmtpResult res = transport_.send(data, account);
+    SmtpResult res = transport_.prepare(data, account);
     if (!res.success) {
         throw std::runtime_error("Failed to send data");
     }

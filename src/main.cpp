@@ -36,27 +36,27 @@ int main() {
         .name = "Dylan Soule",
         .address = "2141247@gmail.com"
     };
-    EmailAddress sendAddr3 = {
-        .name = "Owen Van Westenburg",
-        .address = "2140413@jeffcoschools.us"
-    };
-    EmailAddress sendAddr4 = {
-        .name = "Lucca Townsend",
-        .address = "2132410@jeffcoschools.us"
-    };
-    EmailAddress sendAddr5 = {
-        .name = "Brennon Hill",
-        .address = "2003081@jeffcoschools.us"
-    };
+    // EmailAddress sendAddr3 = {
+    //     .name = "Owen Van Westenburg",
+    //     .address = "2140413@jeffcoschools.us"
+    // };
+    // EmailAddress sendAddr4 = {
+    //     .name = "Lucca Townsend",
+    //     .address = "2132410@jeffcoschools.us"
+    // };
+    // EmailAddress sendAddr5 = {
+    //     .name = "Brennon Hill",
+    //     .address = "2003081@jeffcoschools.us"
+    // };
 
     EmailMessage message = constructMessage(
         1,
         dylan,
         EmailMessage::State::sent,
         std::nullopt,
-        std::vector<EmailAddress>{sendAddr2, sendAddr3},
+        std::vector<EmailAddress>{sendAddr2},
         std::vector<EmailAddress>{sendAddr1},
-        std::vector<EmailAddress>{sendAddr4, sendAddr5},
+        std::vector<EmailAddress
         "Test message 1",
         "Do you know the unladen speed of a swallow"
     );
@@ -80,6 +80,6 @@ int main() {
     SmtpData mess1 = client.buildMessage(message);
     client.send(mess1, dylan);
 
-    
+
     return 0;
 }

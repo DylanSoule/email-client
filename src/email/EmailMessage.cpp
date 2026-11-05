@@ -53,12 +53,12 @@ EmailMessage constructMessage(
     int mId, 
     const EmailAccount& mSender,
     EmailMessage::State mState,
-    std::optional<std::string> mReference,
-    std::optional<std::vector<EmailAddress>> mRecipients,
-    std::optional<std::vector<EmailAddress>> mCc,
-    std::optional<std::vector<EmailAddress>> mBcc,
-    std::optional<std::string> mSubject,
-    std::optional<std::string> mContents) {
+    std::optional<std::string> mReference = std::nullopt,
+    std::optional<std::vector<EmailAddress>> mRecipients = std::nullopt,
+    std::optional<std::vector<EmailAddress>> mCc = std::nullopt,
+    std::optional<std::vector<EmailAddress>> mBcc = std::nullopt,
+    std::optional<std::string> mSubject = std::nullopt,
+    std::optional<std::string> mContents = std::nullopt) {
     
     // Declare temporary struct
     EmailMessage temp;
