@@ -64,8 +64,7 @@ SmtpResult CurlSmtpTransport::prepare (
         - info struct
         - configure data transfer
     */
-
-    std::cout << "\n\n\n\n\n" + account.emailAddress + "\n\n\n\n\n";
+   
     curl_easy_setopt(transaction->easyHandle, CURLOPT_MAIL_FROM, account.emailAddress.c_str());
     curl_easy_setopt(transaction->easyHandle, CURLOPT_MAIL_RCPT, transaction->recipients);
     curl_easy_setopt(transaction->easyHandle, CURLOPT_READFUNCTION, CurlSmtpTransport::payloadCallBack);
