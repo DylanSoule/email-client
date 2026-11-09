@@ -25,6 +25,8 @@ class CurlMulti {
             curl_slist* recipients = nullptr;
             Payload payload;
 
+            Transaction() = default;
+
             ~Transaction();
 
             Transaction(const Transaction&) = delete;

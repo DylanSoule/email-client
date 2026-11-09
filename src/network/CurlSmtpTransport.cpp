@@ -4,6 +4,7 @@
 #include <cstring>
 #include <memory>
 #include <stdexcept>
+#include <iostream> // for testing purposes
 
 #include "SmtpTransport.h"
 #include "CurlSmtpTransport.h"
@@ -35,8 +36,9 @@ SmtpResult CurlSmtpTransport::prepare (
         "Message-ID: " + "<" + message.messageId + ">" + "\r\n" + 
         "Subject: " + message.subject + "\r\n" +
         "\r\n" +
-        message.contents + "\r\n" +
-        "Check RFC 5322.\r\n";
+        message.contents + "\r\n";
+
+    std::cout << transaction->payload.message;
     
     for (auto &addr : message.recipientsList) {
         transaction->recipients = curl_slist_append(transaction->recipients, addr.address.c_str());
@@ -65,12 +67,14 @@ SmtpResult CurlSmtpTransport::prepare (
         - info struct
         - configure data transfer
     */
-    curl_easy_setopt(transaction->easyHandle, CURLOPT_MAIL_FROM, message.sender.c_str());
+
+    std::cout << "\n\n\n\n\n" + account.emailAddress + "\n\n\n\n\n";
+    curl_easy_setopt(transaction->easyHandle, CURLOPT_MAIL_FROM, account.emailAddress.c_str());
     curl_easy_setopt(transaction->easyHandle, CURLOPT_MAIL_RCPT, transaction->recipients);
     curl_easy_setopt(transaction->easyHandle, CURLOPT_READFUNCTION, CurlSmtpTransport::payloadCallBack);
     curl_easy_setopt(transaction->easyHandle, CURLOPT_READDATA, &transaction->payload);
     curl_easy_setopt(transaction->easyHandle, CURLOPT_UPLOAD, 1L);
-    // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    curl_easy_setopt(transaction->easyHandle, CURLOPT_VERBOSE, 1L);
 
     const std::uint64_t transferId = multi_.addTransaction(std::move(transaction));
 

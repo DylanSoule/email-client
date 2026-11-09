@@ -14,6 +14,7 @@ int main() {
     CurlGlobal globalIface;
     CurlMulti multiIface;
 
+    std::cout << "Enter app password\n";
     std::string appPsswd;
     std::getline(std::cin, appPsswd);
 
@@ -36,50 +37,34 @@ int main() {
         .name = "Dylan Soule",
         .address = "2141247@gmail.com"
     };
-    // EmailAddress sendAddr3 = {
-    //     .name = "Owen Van Westenburg",
-    //     .address = "2140413@jeffcoschools.us"
-    // };
-    // EmailAddress sendAddr4 = {
-    //     .name = "Lucca Townsend",
-    //     .address = "2132410@jeffcoschools.us"
-    // };
-    // EmailAddress sendAddr5 = {
-    //     .name = "Brennon Hill",
-    //     .address = "2003081@jeffcoschools.us"
-    // };
+    EmailAddress sendAddr3 = {
+        .name = "Owen Van Westenburg",
+        .address = "owenvanwestenburg@gmail.com"
+    };
+    EmailAddress sendAddr4 = {
+        .name = "Lucca Townsend",
+        .address = "luccatownsend@icloud.com"
+    };
+    EmailAddress sendAddr5 = {
+        .name = "Brennon Hill",
+        .address = "brennon.hill@gmail.com"
+    };
 
     EmailMessage message = constructMessage(
         1,
         dylan,
         EmailMessage::State::sent,
         std::nullopt,
-        std::vector<EmailAddress>{sendAddr2},
+        std::vector<EmailAddress>{sendAddr3, sendAddr4},
         std::vector<EmailAddress>{sendAddr1},
-        std::vector<EmailAddress
+        std::vector<EmailAddress>{sendAddr4},
         "Test message 1",
         "Do you know the unladen speed of a swallow"
-    );
-
-    EmailMessage message2 = constructMessage(
-        2,
-        dylan,
-        EmailMessage::State::sent,
-        message.messageId,
-        std::vector<EmailAddress>{sendAddr2, sendAddr3},
-        std::vector<EmailAddress>{sendAddr1},
-        std::vector<EmailAddress>{sendAddr4, sendAddr5},
-        "RE Test message 1",
-        "African or American Swallow"
     );
 
     CurlSmtpTransport transport(multiIface);
 
     SmtpClient client(dylan, transport);
-
-    SmtpData mess1 = client.buildMessage(message);
-    client.send(mess1, dylan);
-
 
     return 0;
 }
