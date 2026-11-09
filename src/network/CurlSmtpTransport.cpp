@@ -4,7 +4,6 @@
 #include <cstring>
 #include <memory>
 #include <stdexcept>
-#include <iostream> // for testing purposes
 
 #include "SmtpTransport.h"
 #include "CurlSmtpTransport.h"
@@ -37,8 +36,6 @@ SmtpResult CurlSmtpTransport::prepare (
         "Subject: " + message.subject + "\r\n" +
         "\r\n" +
         message.contents + "\r\n";
-
-    std::cout << transaction->payload.message;
     
     for (auto &addr : message.recipientsList) {
         transaction->recipients = curl_slist_append(transaction->recipients, addr.address.c_str());
